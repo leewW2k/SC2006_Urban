@@ -1,0 +1,8 @@
+Let's pass the userId as a State first (future: use Async)
+Why doesn't the userId automatically change
+Calculate the distance
+Calculate the route
+Save this information when stop
+
+MongoREALM
+
