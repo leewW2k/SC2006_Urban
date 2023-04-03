@@ -45,14 +45,15 @@ const App = () => {
         </Stack.Screen>
         <Stack.Screen
           name="Register"
-          component={RegisterScreen}
           options={{
             title: "Register",
             headerStyle: styles.headerStyle,
             headerTitleStyle: styles.headerTitleStyle,
             headerTintColor: "#fff",
           }}
-        />
+        >
+          {(props) => <RegisterScreen {...props} setUserId={setUserId} />}
+        </Stack.Screen>
         <Stack.Screen name="Main" options={{ headerShown: false }}>
           {(props) => (
             <Tab.Navigator

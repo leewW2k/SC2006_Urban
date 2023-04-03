@@ -9,10 +9,11 @@ import {
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, setUserId }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(null);
 
   const handleRegister = async () => {
     try {
@@ -28,7 +29,10 @@ export default function RegisterScreen({ navigation }) {
         }),
       });
       const data = await response.json();
-      console.log(data);
+      setUser(data.user);
+      console.log(user);
+      //setUserId(data)
+      navigation.navigate("Main", setUserId(user._id));
     } catch (error) {
       console.log(error);
     }
