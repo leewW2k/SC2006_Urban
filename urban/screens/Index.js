@@ -31,10 +31,6 @@ const Index = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-      <Button
-        title="Skip"
-        onPress={() => navigation.navigate("Main", { param: "Home" })}
-      />
     </View>
   );
 };
