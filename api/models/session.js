@@ -26,6 +26,10 @@ const sessionSchema = new mongoose.Schema({
     ],
     required: true,
   },
+  isCycle: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Session = mongoose.model("Session", sessionSchema);
