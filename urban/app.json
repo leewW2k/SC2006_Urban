@@ -1,10 +1,14 @@
 {
   "expo": {
-    "name": "urban",
-    "slug": "urban",
+    "name": "Urban",
+    "slug": "Urban",
+    "description": "Location Tracking Application for your Running and Cycling Sessions",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/urbanLogo.png",
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
     "ios": {
