@@ -73,7 +73,6 @@ const ProfileScreen = ({ setUserId, UserId }) => {
     fetchUserData();
   }, [UserId]);
   */
- 
   return (
     <View style={styles.container}>
       <View style={styles.containerSub}>

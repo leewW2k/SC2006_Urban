@@ -19,7 +19,7 @@ const validateEmail = (email) => {
     ) != null;
 };
 
-const isAlphanumeric = require("is-alphanumeric");
+//const isAlphanumeric = require("is-alphanumeric");
 
 export default function RegisterScreen({ navigation, setUserId }) {
   const [name, setName] = useState("");
