@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -18,7 +19,9 @@ const validateEmail = (email) => {
     ) != null;
 };
 
-export default function RegisterScreen({ navigation }) {
+const isAlphanumeric = require("is-alphanumeric");
+
+export default function RegisterScreen({ navigation, setUserId }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +36,43 @@ export default function RegisterScreen({ navigation }) {
 
     return unsubscribe;
   }, [])
+  const [user, setUser] = useState(null);
+
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email);
+  }
+  /*
+  function validRegister(name, email, password) {
+    if (name.length === 0 || email.length === 0 || password.length === 0) {
+      Alert.alert("Username/Email/Password cannot be Empty!!!");
+      return false;
+    }
+    if (!isValidEmail(email)) {
+      Alert.alert("Invalid Email!!!");
+      return false;
+    }
+    if (password.length < 8 || password.length > 20) {
+      Alert.alert("Password must be between 8-20 characters long!!!");
+      return false;
+    }
+    if (name.length < 4 || name.length > 20) {
+      Alert.alert("Username must be between 4-20 characters long!!!");
+      return false;
+    }
+    if (isAlphanumeric(name) == false) {
+      Alert.alert("Your username cannot contain invalid characters!!!");
+      return false;
+    }
+    return true;
+  }
+
+  const register = async () => {
+    if (validRegister(name, email, password)) {
+      console.log("Yes");
+      handleRegister();
+    }
+  };
+  */
 
   const handleRegister = async () => {
     // Error Checking
@@ -75,7 +115,10 @@ export default function RegisterScreen({ navigation }) {
         }),
       });
       const data = await response.json();
-      console.log(data);
+      Alert.alert("Account successfully registered");
+      setUser(data.user);
+      console.log(user);
+      navigation.navigate("Main", setUserId(user._id));
     } catch (error) {
       console.log(error);
     }

@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "@react-navigation/native";
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
+import Moment from "moment";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 const SessionScreen = ({ UserId }) => {
   console.log(UserId);
@@ -23,22 +26,57 @@ const SessionScreen = ({ UserId }) => {
     fetchSessionData();
   }, []);
 
+  function formatDate(date) {
+    Moment.locale("en");
+    return Moment(date).format("MMMM Do YYYY, ddd H:mm a");
+  }
+
+  function secondsToHHMMSS(seconds) {
+    const duration = Moment.duration(seconds, "seconds");
+
+    const formattedDuration =
+      duration.hours() +
+      ":" +
+      duration.minutes().toString().padStart(2, "0") +
+      ":" +
+      duration.seconds().toString().padStart(2, "0");
+    return formattedDuration;
+  }
+
   return (
-    <ScrollView style={styles.container}>
-      {sessions.length > 0 ? (
-        sessions.map((session) => {
-          return (
-            <View style={styles.containerSub}>
-              <Text>{session.date}</Text>
-              <Text>{session.distance}</Text>
-              <Text>{session.timing}</Text>
+    <View style={styles.container}>
+      <ScrollView style={{ flex: 1 }}>
+        {sessions.length > 0 &&
+          sessions.map((session) => (
+            <View style={styles.containerSub} key={session._id}>
+              <View>
+                <Text style={styles.informationText}>
+                  Timing: {secondsToHHMMSS(session.timing)}
+                </Text>
+                <Text style={styles.informationText}>
+                  Distance: {session.distance / 1000} km
+                </Text>
+                <Text style={styles.informationText}>
+                  {formatDate(session.date)}
+                </Text>
+              </View>
+              <View>
+                {session.isCycle ? (
+                  <Image
+                    source={require("../assets/cyclingIcon.png")}
+                    style={styles.icon}
+                  />
+                ) : (
+                  <Image
+                    source={require("../assets/runningIcon.png")}
+                    style={styles.icon}
+                  />
+                )}
+              </View>
             </View>
-          );
-        })
-      ) : (
-        <Text>empty</Text>
-      )}
-    </ScrollView>
+          ))}
+      </ScrollView>
+    </View>
   );
 };
 
@@ -46,56 +84,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: palette.dustyRose,
-    marginTop: -15,
+    alignContent: "center",
+    width: "100%",
+    marginTop: -10,
+    paddingHorizontal: 10,
   },
   containerSub: {
+    flexDirection: "row",
     borderRadius: 20,
-    width: "80%",
-    height: "70%",
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    height: 100,
+    width: "100%",
+    backgroundColor: "#F1E8DF",
     fontFamily: "serif",
-    marginTop: 15,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    alignContent: "center",
-    justifyContent: "center",
-    fontFamily: "serif",
-    fontStyle: "italic",
-  },
-  input: {
-    width: "80%",
-    height: 50,
-    backgroundColor: palette.lavender,
-    borderRadius: 5,
-    marginBottom: 3,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-  },
-  button: {
-    width: "80%",
-    height: 50,
-    backgroundColor: palette.pastelBlue,
-    borderRadius: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 5,
     marginTop: 12,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: "#fff",
-    fontFamily: "serif",
+    justifyContent: "center",
+    alignContent: "space-around",
+    alignItems: "center",
   },
   informationText: {
     fontSize: 14,
     fontFamily: "serif",
-    padding: 5,
-    margin: 5,
+    margin: 3,
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    marginLeft: 30,
   },
 });
 
