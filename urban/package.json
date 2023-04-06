@@ -9,15 +9,19 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "-": "^0.0.1",
     "@expo/vector-icons": "^13.0.0",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "bcrypt": "^5.1.0",
     "expo": "~48.0.9",
+    "expo-cli": "^6.3.2",
     "expo-location": "^15.1.1",
     "expo-status-bar": "~1.4.4",
+    "firebase": "^9.19.1",
     "geolib": "^3.3.3",
+    "global": "^4.4.0",
     "haversine": "^1.1.1",
     "jwt-decode": "^3.1.2",
     "react": "18.2.0",
@@ -41,5 +45,9 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "description": "SC2006 Software Engineering, React Native Expo, MERN\r Please edit config to add relevant const",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

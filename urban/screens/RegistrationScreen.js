@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,14 +7,61 @@ import {
   View,
 } from "react-native";
 import { palette } from "../styling";
-import { BASE_URL } from "../config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../firebase'
+
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    ) != null;
+};
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if(user){
+        navigation.navigate("Main", { param: "Index" });
+      }
+    })
+
+    return unsubscribe;
+  }, [])
 
   const handleRegister = async () => {
+    // Error Checking
+    if(name == "")
+    {
+      setErrorMessage("Error: Name cannot be empty");
+      return;
+    }else if(email == "" || password == "")
+    {
+      setErrorMessage("Error: Email and/or Password cannot be empty");
+      return;
+    }else if(!validateEmail(email))
+    {
+      setErrorMessage("Error: Invalid Email");
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log(user.email);
+    })
+    .catch(error => {
+      alert(error.message);
+      setErrorMessage("Error: " + error.message);
+    });
+
+    /*
     try {
       const response = await fetch(`${BASE_URL}/api/users`, {
         method: "POST",
@@ -32,6 +79,7 @@ export default function RegisterScreen({ navigation }) {
     } catch (error) {
       console.log(error);
     }
+    */
   };
 
   return (
@@ -46,6 +94,17 @@ export default function RegisterScreen({ navigation }) {
             marginBottom: 10,
           }}
         >
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "serif",
+              fontWeight: "bold",
+              marginTop: 4,
+              color: "red",
+            }}
+          >
+          {errorMessage}
+          </Text>
           <TextInput
             style={styles.input}
             placeholder="Username"

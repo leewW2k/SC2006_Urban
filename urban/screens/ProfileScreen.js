@@ -11,7 +11,8 @@ import {
   TextInput,
 } from "react-native";
 import { palette } from "../styling";
-import { BASE_URL } from "../config";
+import { signOut } from "firebase/auth";
+import { auth } from '../firebase'
 
 const ProfileScreen = ({ setUserId, UserId }) => {
   console.log("Profile Page ", UserId);
@@ -21,9 +22,19 @@ const ProfileScreen = ({ setUserId, UserId }) => {
   const [name, setName] = useState("");
   const [isEditable, setIsEditable] = useState(false);
 
+  const handleSignOut = async () => {
+    signOut(auth).then(() => {
+      // Sign-out successful.
+      navigation.navigate("Index");
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
+
   const toggleEditable = async () => {
     setIsEditable(!isEditable);
     console.log(isEditable);
+    /*
     if (isEditable === true) {
       try {
         const response = await fetch(`${BASE_URL}/api/users/${UserId}`, {
@@ -43,8 +54,10 @@ const ProfileScreen = ({ setUserId, UserId }) => {
         console.log(error);
       }
     }
+    */
   };
 
+  /*
   useEffect(() => {
     // Retrieve user attributes from server
     const fetchUserData = async () => {
@@ -59,7 +72,8 @@ const ProfileScreen = ({ setUserId, UserId }) => {
     };
     fetchUserData();
   }, [UserId]);
-
+  */
+ 
   return (
     <View style={styles.container}>
       <View style={styles.containerSub}>
@@ -93,10 +107,7 @@ const ProfileScreen = ({ setUserId, UserId }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            navigation.navigate("Index");
-            setUserId(null);
-          }}
+          onPress={() => handleSignOut()}
         >
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
