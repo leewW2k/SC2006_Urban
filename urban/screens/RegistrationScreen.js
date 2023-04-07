@@ -25,27 +25,27 @@ export default function RegisterScreen({ navigation, setUserId }) {
   function validRegister(name, email, password) {
     if (name.length === 0 || email.length === 0 || password.length === 0) {
       Alert.alert("Username/Email/Password cannot be Empty!!!");
-      setErrorMessage("Error: Username/Email/Password cannot be Empty");
+      setErrorMessage("Username/Email/Password cannot be Empty");
       return false;
     }
     if (!isValidEmail(email)) {
       Alert.alert("Invalid Email!!!");
-      setErrorMessage("Error: Invalid Email");
+      setErrorMessage("Invalid Email");
       return false;
     }
     if (password.length < 8 || password.length > 20) {
       Alert.alert("Password must be between 8-20 characters long!!!");
-      setErrorMessage("Error: Password must be between 8-20 characters long");
+      setErrorMessage("Password must be between 8-20 characters long");
       return false;
     }
     if (name.length < 4 || name.length > 20) {
       Alert.alert("Username must be between 4-20 characters long!!!");
-      setErrorMessage("Error: Username must be between 4-20 characters long");
+      setErrorMessage("Username must be between 4-20 characters long");
       return false;
     }
     if (isAlphanumeric(name) == false) {
       Alert.alert("Your username cannot contain invalid characters!!!");
-      setErrorMessage("Error: Your username cannot contain invalid characters");
+      setErrorMessage("Your username cannot contain invalid characters");
       return false;
     }
     return true;
@@ -72,9 +72,12 @@ export default function RegisterScreen({ navigation, setUserId }) {
         }),
       });
       const data = await response.json();
-      Alert.alert("Account successfully registered");
-      console.log(data["user"]["_id"]);
-      navigation.navigate("Main", setUserId(data["user"]["_id"]));
+      Alert.alert(data.message);
+      if (!data.user) {
+        setErrorMessage(data.message);
+      } else {
+        navigation.navigate("Main", setUserId(data["user"]["_id"]));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -97,11 +100,11 @@ export default function RegisterScreen({ navigation, setUserId }) {
               fontSize: 12,
               fontFamily: "serif",
               fontWeight: "bold",
-              marginTop: 4,
+              marginBottom: 4,
               color: "red",
             }}
           >
-          {errorMessage}
+            {errorMessage}
           </Text>
           <TextInput
             style={styles.input}

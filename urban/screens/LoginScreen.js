@@ -49,15 +49,18 @@ export default function LoginScreen({ navigation, setUserId }) {
       });
       console.log("login");
       const data = await response.json();
-      console.log(data);
+      if (!data.token) {
+        Alert.alert(data.message);
+        setErrorMessage(data.message);
+      }
+      console.log(errorMessage);
       const decodedToken = jwtDecode(data.token);
       const userId = decodedToken.userId;
       console.log(userId);
       setUserId(userId);
       navigation.navigate("Main", { param: "Index" });
     } catch (error) {
-      console.log(error);
-      setErrorMessage("Error: " + error.message);
+      console.log(error.message);
     }
   };
 
@@ -78,11 +81,11 @@ export default function LoginScreen({ navigation, setUserId }) {
               fontSize: 12,
               fontFamily: "serif",
               fontWeight: "bold",
-              marginTop: 4,
+              marginBottom: 4,
               color: "red",
             }}
           >
-          {errorMessage}
+            {errorMessage}
           </Text>
           <TextInput
             style={styles.input}

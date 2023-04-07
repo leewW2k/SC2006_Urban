@@ -8,10 +8,10 @@ router.post("/", async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();
-    res.status(201).send({ user });
+    res.status(201).send({ message: "Account successfully registered", user });
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    res.status(400).send({ message: "Email Taken" });
   }
 });
 
