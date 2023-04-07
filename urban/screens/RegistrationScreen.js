@@ -79,6 +79,8 @@ export default function RegisterScreen({ navigation, setUserId }) {
         navigation.navigate("Main", setUserId(data["user"]["_id"]));
       }
     } catch (error) {
+      Alert.alert("Error: " + error.message);
+      setErrorMessage("Error: " + error.message);
       console.log(error);
     }
   };
