@@ -7,6 +7,7 @@
     "dotenv": "^16.0.3",
     "expo-cli": "^6.3.2",
     "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.2.0",
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0"
   }

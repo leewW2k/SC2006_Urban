@@ -6,8 +6,8 @@ const sessionSchema = new mongoose.Schema({
     default: Date.now,
   },
   id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    type: String,
+    required: true,
   },
   distance: {
     type: Number,
@@ -28,7 +28,7 @@ const sessionSchema = new mongoose.Schema({
   },
   isCycle: {
     type: Boolean,
-    default: true,
+    default: false,
   },
 });
 

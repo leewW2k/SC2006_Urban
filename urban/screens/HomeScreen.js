@@ -1,14 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import MapView, { Callout, Marker } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
-import { palette } from "../styling";
 import { GOOGLE_MAPS_APIKEY } from "../config";
 
-const HomeScreen = ({ navigation, UserId }) => {
+const HomeScreen = ({ UserId }) => {
   //coords pointing to Singapore
   console.log(UserId);
   const [mapRegion, setMapRegion] = useState({
@@ -63,7 +61,6 @@ const HomeScreen = ({ navigation, UserId }) => {
   }, [selectedRegion]);
 
   return (
-    //I Still need to deiplay the map however, the map does not currently work on Web browser, so let's finish everything on the web browser first
     <View style={{ flex: 1 }}>
       <GooglePlacesAutocomplete
         placeholder="Destination"

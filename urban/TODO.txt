@@ -1,8 +1,9 @@
-Let's pass the userId as a State first (future: use Async)
-Why doesn't the userId automatically change
-Calculate the distance
-Calculate the route
-Save this information when stop
+1. Do BACKEND for Tracking Session, should save Session successfully with
+correct inputs
+3. Click into the session to show your route on google maps 
+4. Edit Image
+5. Weather API 
+6. Events API  
 
 MongoREALM
 

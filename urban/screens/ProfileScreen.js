@@ -1,40 +1,28 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import * as Progress from "react-native-progress";
 import {
   View,
   Text,
-  Button,
   TouchableOpacity,
   StyleSheet,
   Image,
   TextInput,
 } from "react-native";
 import { palette } from "../styling";
-import { signOut } from "firebase/auth";
-import { auth } from '../firebase'
+import { BASE_URL } from "../config";
 
-const ProfileScreen = ({ setUserId, UserId }) => {
+const ProfileScreen = ({ UserId }) => {
   console.log("Profile Page ", UserId);
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [goal, setGoal] = useState(0);
   const [isEditable, setIsEditable] = useState(false);
-
-  const handleSignOut = async () => {
-    signOut(auth).then(() => {
-      // Sign-out successful.
-      navigation.navigate("Index");
-    }).catch((error) => {
-      // An error happened.
-    });
-  }
 
   const toggleEditable = async () => {
     setIsEditable(!isEditable);
     console.log(isEditable);
-    /*
     if (isEditable === true) {
       try {
         const response = await fetch(`${BASE_URL}/api/users/${UserId}`, {
@@ -44,20 +32,18 @@ const ProfileScreen = ({ setUserId, UserId }) => {
           },
           body: JSON.stringify({
             name,
+            goal,
           }),
         });
         const data = await response.json();
         setName(name);
-        console.log(name);
+        setGoal(goal);
       } catch (error) {
-        console.log("it is here");
         console.log(error);
       }
     }
-    */
   };
 
-  /*
   useEffect(() => {
     // Retrieve user attributes from server
     const fetchUserData = async () => {
@@ -66,13 +52,14 @@ const ProfileScreen = ({ setUserId, UserId }) => {
         const userData = await response.json();
         setName(userData.name);
         setEmail(userData.email);
+        setGoal(userData.goal);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUserData();
   }, [UserId]);
-  */
+
   return (
     <View style={styles.container}>
       <View style={styles.containerSub}>
@@ -87,16 +74,32 @@ const ProfileScreen = ({ setUserId, UserId }) => {
             source={require("../assets/userIcon.png")}
             style={{ width: 60, height: 60 }}
           />
-          <Text>Logged in as @{email}</Text>
+          <Text>Logged in as:</Text>
+          <Text>{email}</Text>
+        </View>
+        <View>
           <Text style={styles.informationText}>Name:</Text>
           <TextInput
             value={name}
             onChangeText={setName}
             editable={isEditable}
           />
+          <Text style={(styles.informationText, { padding: 10 })}>Goal:</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={styles.informationText}> /</Text>
+            <TextInput
+              keyboardType="numeric"
+              value={goal.toString()}
+              onChangeText={(text) => setGoal(parseFloat(text))}
+              editable={isEditable}
+            />
+          </View>
         </View>
-        <Text style={styles.informationText}>Goal:</Text>
-        <Progress.Bar progress={0.3} width={200} />
         <TouchableOpacity style={styles.button} onPress={toggleEditable}>
           {!isEditable ? (
             <Text style={styles.buttonText}>Edit</Text>
@@ -106,7 +109,9 @@ const ProfileScreen = ({ setUserId, UserId }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => handleSignOut()}
+          onPress={() => {
+            navigation.navigate("Index");
+          }}
         >
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
@@ -127,11 +132,13 @@ const styles = StyleSheet.create({
   containerSub: {
     borderRadius: 20,
     width: "80%",
-    height: "70%",
+    height: 500,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     fontFamily: "serif",
+    paddingTop: 40,
+    paddingBottom: 20,
   },
   title: {
     fontSize: 36,
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 5,
-    marginTop: 12,
+    marginTop: 5,
   },
   buttonText: {
     fontSize: 18,

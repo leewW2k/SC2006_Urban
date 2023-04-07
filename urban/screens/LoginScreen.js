@@ -1,6 +1,5 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -10,59 +9,31 @@ import {
 import jwtDecode from "jwt-decode";
 import { palette } from "../styling";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { auth } from '../firebase'
+import { BASE_URL } from "../config";
+import { Alert } from "react-native";
 
-const validateEmail = (email) => {
-  return String(email)
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    ) != null;
-};
-
+// const validateEmail = (email) => {
+//   return (
+//     String(email)
+//       .toLowerCase()
+//       .match(
+//         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+//       ) != null
+//   );
+// };
 
 export default function LoginScreen({ navigation, setUserId }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  //console.log(`${BASE_URL}/api/users/login`);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if(user){
-        navigation.navigate("Main", { param: "Index" });
-      }
-    })
-
-    return unsubscribe;
-  }, [])
+  console.log(`${BASE_URL}/api/users/login`);
 
   const handleLogin = async () => {
     // Error Checking
-    if(email == "" || password == "")
-    {
-      setErrorMessage("Error: Email and/or Password cannot be empty");
-      return;
-    }else if(!validateEmail(email))
-    {
-      setErrorMessage("Error: Invalid Email");
+    if (email == "" || password == "") {
+      Alert.alert("Error: Email and/or Password cannot be empty");
       return;
     }
 
-    // Login Code
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredentials => {
-      // Signed in
-      const user = userCredentials.user;
-      console.log('Logged in with: ', user.email);
-    }))
-    .catch(error => {
-      setErrorMessage("Error: " + error.message)
-      alert(error.message)
-    })
-
-    /*
     try {
       const response = await fetch(`${BASE_URL}/api/users/login`, {
         method: "POST",
@@ -85,7 +56,6 @@ export default function LoginScreen({ navigation, setUserId }) {
     } catch (error) {
       console.log(error);
     }
-    */
   };
 
   return (
@@ -100,17 +70,6 @@ export default function LoginScreen({ navigation, setUserId }) {
             marginBottom: 10,
           }}
         >
-          <Text
-            style={{
-              fontSize: 12,
-              fontFamily: "serif",
-              fontWeight: "bold",
-              marginTop: 4,
-              color: "red",
-            }}
-          >
-          {errorMessage}
-          </Text>
           <TextInput
             style={styles.input}
             placeholder="Email"

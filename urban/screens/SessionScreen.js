@@ -1,10 +1,8 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link } from "@react-navigation/native";
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
 import Moment from "moment";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Image } from "react-native";
 
 const SessionScreen = ({ UserId }) => {

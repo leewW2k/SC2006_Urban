@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [userId, setUserId] = useState(null);
-  const [mapRegion, setmapRegion] = useState(null);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -63,7 +63,7 @@ const App = () => {
                 tabBarStyle: {
                   backgroundColor: palette.pastelBlue,
                 },
-                tabBarIcon: ({ focused, color, size }) => {
+                tabBarIcon: ({ focused, size }) => {
                   let iconName;
 
                   if (route.name === "Home") {
@@ -107,13 +107,7 @@ const App = () => {
                   headerTintColor: "#fff",
                 }}
               >
-                {(props) => (
-                  <TrackingScreen
-                    {...props}
-                    UserId={userId}
-                    mapRegion={mapRegion}
-                  />
-                )}
+                {(props) => <TrackingScreen {...props} UserId={userId} />}
               </Tab.Screen>
               <Tab.Screen
                 name="Session"

@@ -40,8 +40,12 @@ router.post("/login", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
-    const user = await User.findByIdAndUpdate(id, { name }, { new: true });
+    const { name, goal } = req.body;
+    const user = await User.findByIdAndUpdate(
+      id,
+      { name, goal },
+      { new: true }
+    );
     res.json({ user });
   } catch (error) {
     console.log(error);
