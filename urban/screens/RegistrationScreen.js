@@ -16,6 +16,7 @@ export default function RegisterScreen({ navigation, setUserId }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
@@ -24,22 +25,27 @@ export default function RegisterScreen({ navigation, setUserId }) {
   function validRegister(name, email, password) {
     if (name.length === 0 || email.length === 0 || password.length === 0) {
       Alert.alert("Username/Email/Password cannot be Empty!!!");
+      setErrorMessage("Error: Username/Email/Password cannot be Empty");
       return false;
     }
     if (!isValidEmail(email)) {
       Alert.alert("Invalid Email!!!");
+      setErrorMessage("Error: Invalid Email");
       return false;
     }
     if (password.length < 8 || password.length > 20) {
       Alert.alert("Password must be between 8-20 characters long!!!");
+      setErrorMessage("Error: Password must be between 8-20 characters long");
       return false;
     }
     if (name.length < 4 || name.length > 20) {
       Alert.alert("Username must be between 4-20 characters long!!!");
+      setErrorMessage("Error: Username must be between 4-20 characters long");
       return false;
     }
     if (isAlphanumeric(name) == false) {
       Alert.alert("Your username cannot contain invalid characters!!!");
+      setErrorMessage("Error: Your username cannot contain invalid characters");
       return false;
     }
     return true;
@@ -86,6 +92,17 @@ export default function RegisterScreen({ navigation, setUserId }) {
             marginBottom: 10,
           }}
         >
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "serif",
+              fontWeight: "bold",
+              marginTop: 4,
+              color: "red",
+            }}
+          >
+          {errorMessage}
+          </Text>
           <TextInput
             style={styles.input}
             placeholder="Username"

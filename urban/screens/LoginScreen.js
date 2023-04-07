@@ -25,12 +25,14 @@ import { Alert } from "react-native";
 export default function LoginScreen({ navigation, setUserId }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   console.log(`${BASE_URL}/api/users/login`);
 
   const handleLogin = async () => {
     // Error Checking
     if (email == "" || password == "") {
       Alert.alert("Error: Email and/or Password cannot be empty");
+      setErrorMessage("Error: Email and/or Password cannot be Empty");
       return;
     }
 
@@ -55,6 +57,7 @@ export default function LoginScreen({ navigation, setUserId }) {
       navigation.navigate("Main", { param: "Index" });
     } catch (error) {
       console.log(error);
+      setErrorMessage("Error: " + error.message);
     }
   };
 
@@ -70,6 +73,17 @@ export default function LoginScreen({ navigation, setUserId }) {
             marginBottom: 10,
           }}
         >
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: "serif",
+              fontWeight: "bold",
+              marginTop: 4,
+              color: "red",
+            }}
+          >
+          {errorMessage}
+          </Text>
           <TextInput
             style={styles.input}
             placeholder="Email"

@@ -31,6 +31,16 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.delete("/", async (req, res) => {
+  try {
+    await Session.deleteMany();
+    res.status(200).json({ message: "All sessions deleted successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   console.log(id);
