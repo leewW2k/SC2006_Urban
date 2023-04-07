@@ -57,6 +57,7 @@ export default function LoginScreen({ navigation, setUserId }) {
       navigation.navigate("Main", { param: "Index" });
     } catch (error) {
       console.log(error);
+      Alert.alert("Error: " + error.message);
       setErrorMessage("Error: " + error.message);
     }
   };
