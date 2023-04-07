@@ -9,6 +9,7 @@ import HomeScreen from "./screens/HomeScreen";
 import SessionScreen from "./screens/SessionScreen";
 import React, { useState } from "react";
 import TrackingScreen from "./screens/TrackingScreen";
+import SessionViewScreen from "./screens/SessionViewScreen";
 import { palette } from "./styling";
 import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -134,6 +135,17 @@ const App = () => {
             </Tab.Navigator>
           )}
         </Stack.Screen>
+        <Stack.Screen
+                name="SessionView"
+                options={{
+                  title: "SessionView",
+                  headerStyle: styles.headerStyle,
+                  headerTitleStyle: styles.headerTitleStyle,
+                  headerTintColor: "#fff",
+                }}
+              >
+                {(props) => <SessionViewScreen {...props} UserId={userId} />}
+          </Stack.Screen>
         <Stack.Screen name="Track" component={TrackingScreen} />
       </Stack.Navigator>
     </NavigationContainer>

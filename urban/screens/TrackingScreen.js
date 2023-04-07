@@ -169,6 +169,25 @@ const TrackingScreen = ({ UserId }) => {
     setPrevLocation(location);
   };
 
+  const handleDeleteAll = async () => {
+    const response = await fetch(`${BASE_URL}/api/sessions`, {
+      method: "DELETE",
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(`Deleted ${data.deletedCount} documents`);
+      Alert.alert("Session successfully deleted");
+    })
+    .catch(error => {
+      console.error(error);
+      Alert.alert(error.message)
+    });
+  }
+
   const handleStart = () => {
     locationArrayRef.current = [];
     setTiming((time) => 0);
@@ -204,7 +223,7 @@ const TrackingScreen = ({ UserId }) => {
           id: UserId,
           distance,
           timing,
-          locationArrayRef,
+          coordinates:locationArrayRef.current,
           isCycle,
         }),
       });
@@ -302,7 +321,7 @@ const TrackingScreen = ({ UserId }) => {
           }}
         >
           {!started ? (
-            <View>
+            <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
                 style={styles.controlButton}
                 onPress={handleStart}

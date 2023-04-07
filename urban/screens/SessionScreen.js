@@ -1,26 +1,42 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
 import Moment from "moment";
 import { Image } from "react-native";
 
-const SessionScreen = ({ UserId }) => {
+const SessionScreen = ({ navigation, UserId }) => {
   console.log(UserId);
   const [sessions, setSessions] = useState([]);
+  const [timing, setTiming] = useState(0);
+  const [distance, setDistance] = useState(0);
+
+  const fetchSessionData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/sessions/${UserId}`);
+      const sessionData = await response.json();
+      console.log("start session data")
+      console.log(sessionData);
+      if(sessionData.length > 0)
+        console.log("Attempting to parse sessionData.coordinates", sessionData[0].coordinates);
+      
+      /*
+      try {
+        const parsedJson = JSON.parse(sessionData[0].coordinates);
+        console.log(parsedJson);
+      } catch (error) {
+        console.log(error);
+      }
+      */
+      console.log("end session data")
+      setSessions(sessionData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     // Retrieve user attributes from server
-    const fetchSessionData = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/sessions/${UserId}`);
-        const sessionData = await response.json();
-        console.log(sessionData);
-        setSessions(sessionData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchSessionData();
   }, []);
 
@@ -43,35 +59,55 @@ const SessionScreen = ({ UserId }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => fetchSessionData()}>
+        <Text
+          style={{
+            fontSize: 12,
+            fontFamily: "serif",
+            fontStyle: "italic",
+            marginTop: 4,
+          }}
+        >
+          Refresh Sessions
+        </Text>
+      </TouchableOpacity>
       <ScrollView style={{ flex: 1 }}>
         {sessions.length > 0 &&
           sessions.map((session) => (
-            <View style={styles.containerSub} key={session._id}>
-              <View>
-                <Text style={styles.informationText}>
-                  Timing: {secondsToHHMMSS(session.timing)}
-                </Text>
-                <Text style={styles.informationText}>
-                  Distance: {session.distance / 1000} km
-                </Text>
-                <Text style={styles.informationText}>
-                  {formatDate(session.date)}
-                </Text>
+            <TouchableOpacity
+            style={styles.containerSub}
+            key={session._id}
+            onPress={() => {
+              navigation.navigate('SessionView', { session: session });
+            }}
+          >
+              <View style={styles.containerSub} key={session._id}>
+                <View>
+                  <Text style={styles.informationText}>
+                    Timing: {secondsToHHMMSS(session.timing)}
+                  </Text>
+                  <Text style={styles.informationText}>
+                    Distance: {session.distance / 1000} km
+                  </Text>
+                  <Text style={styles.informationText}>
+                    {formatDate(session.date)}
+                  </Text>
+                </View>
+                <View>
+                  {session.isCycle ? (
+                    <Image
+                      source={require("../assets/cyclingIcon.png")}
+                      style={styles.icon}
+                    />
+                  ) : (
+                    <Image
+                      source={require("../assets/runningIcon.png")}
+                      style={styles.icon}
+                    />
+                  )}
+                </View>
               </View>
-              <View>
-                {session.isCycle ? (
-                  <Image
-                    source={require("../assets/cyclingIcon.png")}
-                    style={styles.icon}
-                  />
-                ) : (
-                  <Image
-                    source={require("../assets/runningIcon.png")}
-                    style={styles.icon}
-                  />
-                )}
-              </View>
-            </View>
+            </TouchableOpacity>
           ))}
       </ScrollView>
     </View>
