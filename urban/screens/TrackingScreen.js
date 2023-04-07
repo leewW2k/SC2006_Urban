@@ -275,7 +275,6 @@ const TrackingScreen = ({ UserId }) => {
         <View
           style={{
             backgroundColor: "#F1E8DF",
-            marginTop: 10,
             borderRadius: 10,
             width: "100%",
             alignContent: "center",
@@ -350,11 +349,10 @@ const TrackingScreen = ({ UserId }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: palette.dustyRose,
+    backgroundColor: palette.pastelBlue,
     alignContent: "center",
     width: "100%",
     height: 500,
-    marginTop: -10,
     paddingHorizontal: 10,
   },
   cycleRunText: {
@@ -389,8 +387,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     height: 40,
-    borderRadius: 20,
-    marginTop: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: 17,
   },
   controlButton: {
     //flexDirection: "row",
@@ -402,7 +401,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 20,
     margin: 10,
-    marginTop: 15,
+    marginTop: 16,
     textAlign: "center",
   },
   informationText: {
@@ -420,8 +419,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignContent: "center",
     height: 40,
-    borderRadius: 20,
-    marginTop: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: 17,
   },
 });
 

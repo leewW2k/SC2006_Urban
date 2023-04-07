@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
+import { ImageBackgroundComponent } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 const ProfileScreen = ({ UserId }) => {
   console.log("Profile Page ", UserId);
@@ -19,8 +21,26 @@ const ProfileScreen = ({ UserId }) => {
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(0);
   const [isEditable, setIsEditable] = useState(false);
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result.assets[0].uri);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const toggleEditable = async () => {
+    console.log(ImageBackgroundComponent);
     setIsEditable(!isEditable);
     console.log(isEditable);
     if (isEditable === true) {
@@ -31,6 +51,7 @@ const ProfileScreen = ({ UserId }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            image,
             name,
             goal,
           }),
@@ -50,9 +71,11 @@ const ProfileScreen = ({ UserId }) => {
       try {
         const response = await fetch(`${BASE_URL}/api/users/${UserId}`);
         const userData = await response.json();
+        console.log(userData);
         setName(userData.name);
         setEmail(userData.email);
         setGoal(userData.goal);
+        setImage(userData.image);
       } catch (error) {
         console.error(error);
       }
@@ -70,10 +93,25 @@ const ProfileScreen = ({ UserId }) => {
             justifyContent: "center",
           }}
         >
-          <Image
-            source={require("../assets/userIcon.png")}
-            style={{ width: 60, height: 60 }}
-          />
+          <TouchableOpacity onPress={pickImage} disabled={!isEditable}>
+            {image ? (
+              <Image
+                source={{ uri: image }}
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 80,
+                  marginTop: -10,
+                  marginBottom: 10,
+                }}
+              />
+            ) : (
+              <Image
+                source={require("../assets/userIcon.png")}
+                style={{ width: 80, height: 80, borderRadius: 80 }}
+              />
+            )}
+          </TouchableOpacity>
           <Text>Logged in as:</Text>
           <Text>{email}</Text>
         </View>

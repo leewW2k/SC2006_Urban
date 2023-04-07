@@ -40,10 +40,10 @@ router.post("/login", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, goal } = req.body;
+    const { image, name, goal } = req.body;
     const user = await User.findByIdAndUpdate(
       id,
-      { name, goal },
+      { image, name, goal },
       { new: true }
     );
     res.json({ user });
