@@ -31,6 +31,7 @@ const TrackingScreen = ({ UserId }) => {
   const [prevLocation, setPrevLocation] = useState(null);
   const [paused, setPaused] = useState(false);
   const [isCycle, setIsCycle] = useState(true);
+  const [goalProgress, setGoalProgress] = useState(0);
 
   const LOCATION_TASK_NAME = "background-location-task";
   TaskManager.defineTask(
@@ -64,7 +65,17 @@ const TrackingScreen = ({ UserId }) => {
         longitudeDelta: 0.002,
       });
     };
+    const fetchProgress = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/users/${UserId}`);
+        const userData = await response.json();
+        setGoalProgress(userData.goalProgress);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     userLocation();
+    fetchProgress();
   }, []);
 
   const startBackgroundLocation = async () => {
@@ -169,25 +180,6 @@ const TrackingScreen = ({ UserId }) => {
     setPrevLocation(location);
   };
 
-  const handleDeleteAll = async () => {
-    const response = await fetch(`${BASE_URL}/api/sessions`, {
-      method: "DELETE",
-    }).then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log(`Deleted ${data.deletedCount} documents`);
-      Alert.alert("Session successfully deleted");
-    })
-    .catch(error => {
-      console.error(error);
-      Alert.alert(error.message)
-    });
-  }
-
   const handleStart = () => {
     locationArrayRef.current = [];
     setTiming((time) => 0);
@@ -211,7 +203,33 @@ const TrackingScreen = ({ UserId }) => {
     await resumeBackgroundLocation();
   };
 
+  useEffect(() => {
+    updateGoal();
+  }, [goalProgress]);
+
+  const updateGoal = async () => {
+    try {
+      console.log(goalProgress);
+      const response = await fetch(
+        `${BASE_URL}/api/users/${UserId}/goal-progress`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            goalProgress,
+          }),
+        }
+      );
+      const data = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleStop = async () => {
+    setGoalProgress((prevGoalProgress) => prevGoalProgress + distance);
     try {
       console.log("STOP");
       const response = await fetch(`${BASE_URL}/api/sessions`, {
@@ -223,7 +241,7 @@ const TrackingScreen = ({ UserId }) => {
           id: UserId,
           distance,
           timing,
-          coordinates:locationArrayRef.current,
+          coordinates: locationArrayRef.current,
           isCycle,
         }),
       });

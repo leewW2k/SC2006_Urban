@@ -53,6 +53,22 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.put("/:id/goal-progress", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { goalProgress } = req.body;
+    const user = await User.findByIdAndUpdate(
+      id,
+      { goalProgress },
+      { new: true }
+    );
+    res.json({ user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Could not update goal progress" });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   console.log("id received: " + id);

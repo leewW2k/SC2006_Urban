@@ -7,21 +7,25 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
 import { ImageBackgroundComponent } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { useIsFocused } from "@react-navigation/native";
 
 const ProfileScreen = ({ UserId }) => {
   console.log("Profile Page ", UserId);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(0);
   const [isEditable, setIsEditable] = useState(false);
   const [image, setImage] = useState(null);
+  const [goalProgress, setGoalProgress] = useState(0);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -44,6 +48,18 @@ const ProfileScreen = ({ UserId }) => {
     setIsEditable(!isEditable);
     console.log(isEditable);
     if (isEditable === true) {
+      if (name.length === "") {
+        Alert.alert("Username cannot be empty");
+        return;
+      }
+      if (name.length < 4 || name.length > 20) {
+        Alert.alert("Username must be between 4 to 20 characters");
+        return;
+      }
+      if (goal < 10 || goal > 999) {
+        Alert.alert("Goal must be between 10-999 km");
+        return;
+      }
       try {
         const response = await fetch(`${BASE_URL}/api/users/${UserId}`, {
           method: "PUT",
@@ -54,11 +70,13 @@ const ProfileScreen = ({ UserId }) => {
             image,
             name,
             goal,
+            goalProgress,
           }),
         });
         const data = await response.json();
         setName(name);
         setGoal(goal);
+        setGoalProgress(goalProgress);
       } catch (error) {
         console.log(error);
       }
@@ -76,12 +94,20 @@ const ProfileScreen = ({ UserId }) => {
         setEmail(userData.email);
         setGoal(userData.goal);
         setImage(userData.image);
+        setGoalProgress(userData.goalProgress);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUserData();
-  }, [UserId]);
+  }, [UserId, isEditable, isFocused]);
+
+  const checkValueIsNumberOrNot = (inputValue) => {
+    if (isNaN(parseFloat(inputValue))) {
+      return 0;
+    }
+    return parseFloat(inputValue);
+  };
 
   return (
     <View style={styles.container}>
@@ -112,33 +138,46 @@ const ProfileScreen = ({ UserId }) => {
               />
             )}
           </TouchableOpacity>
-          <Text>Logged in as:</Text>
-          <Text>{email}</Text>
+          <Text style={styles.title}>Logged in as:</Text>
+          <Text style={styles.informationText}>{email}</Text>
         </View>
-        <View>
-          <Text style={styles.informationText}>Name:</Text>
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            editable={isEditable}
-          />
-          <Text style={(styles.informationText, { padding: 10 })}>Goal:</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={styles.informationText}> /</Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "space-evenly",
+            alignItems: "baseline",
+            borderWidth: 5,
+            width: "100%",
+            margin: 5,
+          }}
+        >
+          <View style={{ flexDirection: "row", borderWidth: 1 }}>
+            <Text style={styles.title}>Name: </Text>
             <TextInput
-              keyboardType="numeric"
-              value={goal.toString()}
-              onChangeText={(text) => setGoal(parseFloat(text))}
+              value={name}
+              onChangeText={setName}
               editable={isEditable}
+              style={styles.editText}
             />
           </View>
+          <View style={{ flexDirection: "row", alignContent: "space-between" }}>
+            <View>
+              <Text style={styles.title}>Goal:</Text>
+              <Text style={styles.informationText}>
+                {(goal ? goalProgress % goal : 0).toFixed(2)}
+              </Text>
+              <Text style={styles.title}>Goal Progress:</Text>
+              <TextInput
+                keyboardType="numeric"
+                value={goal.toString()}
+                onChangeText={(text) => setGoal(checkValueIsNumberOrNot(text))}
+                editable={isEditable}
+                style={styles.editGoalText}
+              />
+            </View>
+          </View>
         </View>
-        <TouchableOpacity style={styles.button} onPress={toggleEditable}>
+        <TouchableOpacity style={styles.editButton} onPress={toggleEditable}>
           {!isEditable ? (
             <Text style={styles.buttonText}>Edit</Text>
           ) : (
@@ -173,18 +212,19 @@ const styles = StyleSheet.create({
     height: 500,
     backgroundColor: "white",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     fontFamily: "serif",
     paddingTop: 40,
     paddingBottom: 20,
   },
   title: {
-    fontSize: 36,
+    fontSize: 14,
     fontWeight: "bold",
     alignContent: "center",
     justifyContent: "center",
     fontFamily: "serif",
     fontStyle: "italic",
+    marginTop: 5,
   },
   input: {
     width: "80%",
@@ -203,8 +243,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    padding: 5,
-    marginTop: 5,
+    marginTop: 15,
+  },
+  editButton: {
+    width: "60%",
+    height: 40,
+    backgroundColor: palette.pastelBlue,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     fontSize: 18,
@@ -214,8 +261,16 @@ const styles = StyleSheet.create({
   informationText: {
     fontSize: 14,
     fontFamily: "serif",
-    padding: 5,
-    margin: 5,
+    marginTop: 5,
+  },
+  editText: {
+    fontSize: 14,
+    fontFamily: "serif",
+  },
+  editGoalText: {
+    fontSize: 14,
+    fontFamily: "serif",
+    marginTop: -5,
   },
 });
 

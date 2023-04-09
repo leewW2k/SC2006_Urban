@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { palette } from "../styling";
 import { BASE_URL } from "../config";
@@ -8,28 +15,27 @@ import { Image } from "react-native";
 const SessionScreen = ({ navigation, UserId }) => {
   console.log(UserId);
   const [sessions, setSessions] = useState([]);
-  const [timing, setTiming] = useState(0);
-  const [distance, setDistance] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchSessionData();
+  };
 
   const fetchSessionData = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/sessions/${UserId}`);
       const sessionData = await response.json();
-      console.log("start session data")
+      console.log("start session data");
       console.log(sessionData);
-      if(sessionData.length > 0)
-        console.log("Attempting to parse sessionData.coordinates", sessionData[0].coordinates);
-      
-      /*
-      try {
-        const parsedJson = JSON.parse(sessionData[0].coordinates);
-        console.log(parsedJson);
-      } catch (error) {
-        console.log(error);
-      }
-      */
-      console.log("end session data")
+      if (sessionData.length > 0)
+        console.log(
+          "Attempting to parse sessionData.coordinates",
+          sessionData[0].coordinates
+        );
+      console.log("end session data");
       setSessions(sessionData);
+      setRefreshing(false);
     } catch (error) {
       console.error(error);
     }
@@ -59,35 +65,28 @@ const SessionScreen = ({ navigation, UserId }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => fetchSessionData()}>
-        <Text
-          style={{
-            fontSize: 12,
-            fontFamily: "serif",
-            fontStyle: "italic",
-            marginTop: 4,
-          }}
-        >
-          Refresh Sessions
-        </Text>
-      </TouchableOpacity>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {sessions.length > 0 &&
           sessions.map((session) => (
             <TouchableOpacity
-            style={styles.containerSub}
-            key={session._id}
-            onPress={() => {
-              navigation.navigate('SessionView', { session: session });
-            }}
-          >
+              style={styles.containerSub}
+              key={session._id}
+              onPress={() => {
+                navigation.navigate("SessionView", { session: session });
+              }}
+            >
               <View style={styles.containerSub} key={session._id}>
                 <View>
                   <Text style={styles.informationText}>
                     Timing: {secondsToHHMMSS(session.timing)}
                   </Text>
                   <Text style={styles.informationText}>
-                    Distance: {session.distance / 1000} km
+                    Distance: {(session.distance / 1000).toFixed(2)} km
                   </Text>
                   <Text style={styles.informationText}>
                     {formatDate(session.date)}
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#F1E8DF",
     fontFamily: "serif",
-    marginTop: 12,
+    marginTop: 14,
     justifyContent: "center",
     alignContent: "space-around",
     alignItems: "center",
