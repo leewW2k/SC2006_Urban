@@ -3,6 +3,8 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import { palette } from "../styling";
 import Moment from "moment";
+import { MaterialIcons } from "@expo/vector-icons";
+import { TextInput } from "react-native";
 
 const SessionViewScreen = ({ route, UserId }) => {
   const [timing, setTiming] = useState(0);
@@ -65,7 +67,13 @@ const SessionViewScreen = ({ route, UserId }) => {
         />
       </MapView>
       <View style={styles.container}>
-        <Text>{title}</Text>
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
+          <Text style={styles.titleText}>{title}</Text>
+        </View>
         <View
           style={{
             backgroundColor: "#F1E8DF",
@@ -110,6 +118,16 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontStyle: "italic",
     padding: 10,
+  },
+  titleText: {
+    fontSize: 22,
+    color: "black",
+    fontFamily: "serif",
+    fontStyle: "italic",
+    fontWeight: "bold",
+    marginTop: -5,
+    marginBottom: 10,
+    paddingRight: 10,
   },
   map: {
     width: "100%",
