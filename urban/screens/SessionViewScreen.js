@@ -7,6 +7,7 @@ import Moment from "moment";
 const SessionViewScreen = ({ route, UserId }) => {
   const [timing, setTiming] = useState(0);
   const [distance, setDistance] = useState(0);
+  const [title, setTitle] = useState("");
   console.log("Session View");
   const { session } = route.params;
   const [mapRegion, setMapRegion] = useState({
@@ -19,6 +20,7 @@ const SessionViewScreen = ({ route, UserId }) => {
   useEffect(() => {
     setTiming(session.timing);
     setDistance(session.distance);
+    setTitle(session.title);
   }, []);
 
   const routeCoordinates = session.coordinates;
@@ -63,6 +65,7 @@ const SessionViewScreen = ({ route, UserId }) => {
         />
       </MapView>
       <View style={styles.container}>
+        <Text>{title}</Text>
         <View
           style={{
             backgroundColor: "#F1E8DF",

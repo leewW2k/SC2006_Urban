@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  TextInput,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -32,6 +33,7 @@ const TrackingScreen = ({ UserId }) => {
   const [paused, setPaused] = useState(false);
   const [isCycle, setIsCycle] = useState(true);
   const [goalProgress, setGoalProgress] = useState(0);
+  const [title, setTitle] = useState("Urban Adventure");
 
   const LOCATION_TASK_NAME = "background-location-task";
   TaskManager.defineTask(
@@ -243,6 +245,7 @@ const TrackingScreen = ({ UserId }) => {
           timing,
           coordinates: locationArrayRef.current,
           isCycle,
+          title,
         }),
       });
       const data = await response.json();
@@ -281,6 +284,14 @@ const TrackingScreen = ({ UserId }) => {
         <Marker coordinate={mapRegion} title="MyLocation" />
       </MapView>
       <View style={styles.container}>
+        <View style={{ marginBottom: -15 }}>
+          <TextInput
+            style={styles.cycleRunText}
+            value={title}
+            onChangeText={setTitle}
+            editable={!started}
+          />
+        </View>
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <TouchableOpacity
             style={[
@@ -438,7 +449,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 20,
     margin: 10,
-    marginTop: 16,
+    marginTop: 10,
     textAlign: "center",
   },
   informationText: {

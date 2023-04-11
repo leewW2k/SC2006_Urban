@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
+const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -20,11 +20,11 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send({ message: "Invalid credentials" });
+      return res.status(400).send({ message: "Invalid Email" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).send({ message: "Invalid password" });
+      return res.status(400).send({ message: "Invalid Password" });
     }
     const token = jwt.sign({ userId: user._id }, "secretkey", {
       expiresIn: "1h",

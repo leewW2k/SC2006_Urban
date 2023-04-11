@@ -11,11 +11,13 @@ import { palette } from "../styling";
 import { BASE_URL } from "../config";
 import Moment from "moment";
 import { Image } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 const SessionScreen = ({ navigation, UserId }) => {
   console.log(UserId);
   const [sessions, setSessions] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const isFocused = useIsFocused();
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -44,7 +46,7 @@ const SessionScreen = ({ navigation, UserId }) => {
   useEffect(() => {
     // Retrieve user attributes from server
     fetchSessionData();
-  }, []);
+  }, [isFocused]);
 
   function formatDate(date) {
     Moment.locale("en");
@@ -82,6 +84,7 @@ const SessionScreen = ({ navigation, UserId }) => {
             >
               <View style={styles.containerSub} key={session._id}>
                 <View>
+                  <Text>{session.title}</Text>
                   <Text style={styles.informationText}>
                     Timing: {secondsToHHMMSS(session.timing)}
                   </Text>

@@ -30,6 +30,10 @@ const sessionSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  title: {
+    type: String,
+    required: true,
+  },
 });
 
 const Session = mongoose.model("Session", sessionSchema);

@@ -138,8 +138,10 @@ const ProfileScreen = ({ UserId }) => {
               />
             )}
           </TouchableOpacity>
-          <Text style={styles.title}>Logged in as:</Text>
-          <Text style={styles.informationText}>{email}</Text>
+          <Text style={styles.titleName}>Logged in as:</Text>
+          <Text style={{ fontSize: 14, fontFamily: "serif", marginTop: 5 }}>
+            {email}
+          </Text>
         </View>
         <View
           style={{
@@ -162,11 +164,16 @@ const ProfileScreen = ({ UserId }) => {
           </View>
           <View style={{ flexDirection: "row", alignContent: "space-between" }}>
             <View>
-              <Text style={styles.title}>Goal:</Text>
+              <Text style={styles.title}>Goal Progress (km):</Text>
               <Text style={styles.informationText}>
-                {(goal ? goalProgress % goal : 0).toFixed(2)}
+                {(goal ? (goalProgress / 1000) % goal : 0).toFixed(2)}
+                {"    ("}
+                {goal
+                  ? ((((goalProgress / 1000) % goal) / goal) * 100).toFixed(3)
+                  : 0}
+                {"%)"}
               </Text>
-              <Text style={styles.title}>Goal Progress:</Text>
+              <Text style={styles.title}>Goal (km):</Text>
               <TextInput
                 keyboardType="numeric"
                 value={goal.toString()}
@@ -225,6 +232,16 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontStyle: "italic",
     marginTop: 5,
+    paddingLeft: 5,
+  },
+  titleName: {
+    fontSize: 14,
+    fontWeight: "bold",
+    alignContent: "center",
+    justifyContent: "center",
+    fontFamily: "serif",
+    fontStyle: "italic",
+    marginTop: 5,
   },
   input: {
     width: "80%",
@@ -262,6 +279,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "serif",
     marginTop: 5,
+    paddingLeft: 5,
   },
   editText: {
     fontSize: 14,
@@ -270,7 +288,8 @@ const styles = StyleSheet.create({
   editGoalText: {
     fontSize: 14,
     fontFamily: "serif",
-    marginTop: -5,
+    marginTop: 0,
+    paddingLeft: 5,
   },
 });
 

@@ -4,13 +4,14 @@ const Session = require("../models/session");
 
 router.post("/", async (req, res) => {
   try {
-    const { id, distance, timing, coordinates, isCycle } = req.body;
+    const { id, distance, timing, coordinates, isCycle, title } = req.body;
     const session = new Session({
       id,
       distance,
       timing,
       coordinates,
       isCycle,
+      title,
     });
     const savedSession = await session.save();
     res.status(201).json(savedSession);

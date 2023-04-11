@@ -8,19 +8,8 @@ import {
 } from "react-native";
 import jwtDecode from "jwt-decode";
 import { palette } from "../styling";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { BASE_URL } from "../config";
 import { Alert } from "react-native";
-
-// const validateEmail = (email) => {
-//   return (
-//     String(email)
-//       .toLowerCase()
-//       .match(
-//         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-//       ) != null
-//   );
-// };
 
 export default function LoginScreen({ navigation, setUserId }) {
   const [email, setEmail] = useState("");
@@ -31,8 +20,8 @@ export default function LoginScreen({ navigation, setUserId }) {
   const handleLogin = async () => {
     // Error Checking
     if (email == "" || password == "") {
-      Alert.alert("Error: Email and/or Password cannot be empty");
-      setErrorMessage("Error: Email and/or Password cannot be Empty");
+      Alert.alert("Email/Password cannot be Empty!!!");
+      setErrorMessage("Email/Password cannot be Empty");
       return;
     }
 
