@@ -83,8 +83,8 @@ const SessionScreen = ({ navigation, UserId }) => {
               }}
             >
               <View style={styles.containerSub} key={session._id}>
-                <View>
-                  <Text>{session.title}</Text>
+                <View style={{ marginTop: -10 }}>
+                  <Text style={styles.titleText}>{session.title}</Text>
                   <Text style={styles.informationText}>
                     Timing: {secondsToHHMMSS(session.timing)}
                   </Text>
@@ -140,7 +140,16 @@ const styles = StyleSheet.create({
   informationText: {
     fontSize: 14,
     fontFamily: "serif",
-    margin: 3,
+    marginLeft: 3,
+    marginTop: 3,
+  },
+  titleText: {
+    fontSize: 14,
+    fontFamily: "serif",
+    marginLeft: 3,
+    marginTop: 3,
+    fontWeight: "bold",
+    fontStyle: "italic",
   },
   icon: {
     width: 40,

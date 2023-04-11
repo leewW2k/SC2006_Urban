@@ -15,6 +15,7 @@ import { getDistance } from "geolib";
 import { BASE_URL } from "../config";
 import * as TaskManager from "expo-task-manager";
 import { palette } from "../styling";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const TrackingScreen = ({ UserId }) => {
   const navigation = useNavigation();
