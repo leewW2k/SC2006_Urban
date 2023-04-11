@@ -14,6 +14,7 @@ import { BASE_URL } from "../config";
 import { ImageBackgroundComponent } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useIsFocused } from "@react-navigation/native";
+import Moment from "moment";
 
 const ProfileScreen = ({ UserId }) => {
   console.log("Profile Page ", UserId);
@@ -61,9 +62,8 @@ const ProfileScreen = ({ UserId }) => {
         Alert.alert("Goal must be between 10-999 km");
         return;
       }
-      if(goal < goalProgress / 1000)
-      {
-        Alert.alert("Goal must be between " + (goalProgress / 1000) + "-999 km");
+      if (goal < goalProgress / 1000) {
+        Alert.alert("Goal must be between " + goalProgress / 1000 + "-999 km");
         return;
       }
       try {
@@ -117,6 +117,11 @@ const ProfileScreen = ({ UserId }) => {
     return parseFloat(inputValue);
   };
 
+  const formatDate = (date) => {
+    Moment.locale("en");
+    return Moment(date).format("MMMM Do YYYY");
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerSub}>
@@ -156,12 +161,11 @@ const ProfileScreen = ({ UserId }) => {
             flex: 1,
             justifyContent: "space-evenly",
             alignItems: "baseline",
-            borderWidth: 5,
             width: "100%",
             margin: 5,
           }}
         >
-          <View style={{ flexDirection: "row", borderWidth: 1 }}>
+          <View style={{ flexDirection: "row" }}>
             <Text style={styles.title}>Name: </Text>
             <TextInput
               value={name}
@@ -174,13 +178,10 @@ const ProfileScreen = ({ UserId }) => {
             <View>
               <Text style={styles.title}>Goal Progress (km):</Text>
               <Text style={styles.informationText}>
-                {(goal ? (goalProgress / 1000) : 0).toFixed(2)}
+                {(goal ? goalProgress / 1000 : 0).toFixed(2)}
                 {"    ("}
-                {goal
-                  ? ((((goalProgress / 1000)) / goal) * 100).toFixed(3)
-                  : 0}
+                {goal ? ((goalProgress / 1000 / goal) * 100).toFixed(3) : 0}
                 {"%)"}
-                {goalCompleteDate ? " Goal Reached!" : ""}
               </Text>
               <Text style={styles.title}>Goal (km):</Text>
               <TextInput
@@ -190,6 +191,13 @@ const ProfileScreen = ({ UserId }) => {
                 editable={isEditable}
                 style={styles.editGoalText}
               />
+              <Text style={styles.goalText}>
+                {goalCompleteDate ? (
+                  <Text>Goal Completed on {formatDate(goalCompleteDate)}</Text>
+                ) : (
+                  "No Goals Completed"
+                )}
+              </Text>
             </View>
           </View>
         </View>
@@ -241,7 +249,7 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontStyle: "italic",
     marginTop: 5,
-    paddingLeft: 5,
+    paddingLeft: 15,
   },
   titleName: {
     fontSize: 14,
@@ -251,6 +259,12 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
     fontStyle: "italic",
     marginTop: 5,
+  },
+  goalText: {
+    fontSize: 14,
+    fontStyle: "italic",
+    fontFamily: "serif",
+    paddingLeft: 15,
   },
   input: {
     width: "80%",
@@ -288,7 +302,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "serif",
     marginTop: 5,
-    paddingLeft: 5,
+    paddingLeft: 15,
   },
   editText: {
     fontSize: 14,
@@ -298,7 +312,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "serif",
     marginTop: 0,
-    paddingLeft: 5,
+    paddingLeft: 15,
   },
 });
 
