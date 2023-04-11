@@ -61,6 +61,11 @@ const ProfileScreen = ({ UserId }) => {
         Alert.alert("Goal must be between 10-999 km");
         return;
       }
+      if(goal < goalProgress / 1000)
+      {
+        Alert.alert("Goal must be between " + (goalProgress / 1000) + "-999 km");
+        return;
+      }
       try {
         const response = await fetch(`${BASE_URL}/api/users/${UserId}`, {
           method: "PUT",
@@ -71,7 +76,7 @@ const ProfileScreen = ({ UserId }) => {
             image,
             name,
             goal,
-            goalProgress: 0,
+            goalProgress,
           }),
         });
         const data = await response.json();
