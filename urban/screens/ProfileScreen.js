@@ -26,6 +26,7 @@ const ProfileScreen = ({ UserId }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [image, setImage] = useState(null);
   const [goalProgress, setGoalProgress] = useState(0);
+  const [goalCompleteDate, setGoalCompleteDate] = useState(null);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -70,7 +71,7 @@ const ProfileScreen = ({ UserId }) => {
             image,
             name,
             goal,
-            goalProgress,
+            goalProgress: 0,
           }),
         });
         const data = await response.json();
@@ -89,12 +90,14 @@ const ProfileScreen = ({ UserId }) => {
       try {
         const response = await fetch(`${BASE_URL}/api/users/${UserId}`);
         const userData = await response.json();
+        console.log("[Profile Screen] Fetch data:");
         console.log(userData);
         setName(userData.name);
         setEmail(userData.email);
         setGoal(userData.goal);
         setImage(userData.image);
         setGoalProgress(userData.goalProgress);
+        setGoalCompleteDate(userData.goalCompleteDate);
       } catch (error) {
         console.error(error);
       }
@@ -166,12 +169,13 @@ const ProfileScreen = ({ UserId }) => {
             <View>
               <Text style={styles.title}>Goal Progress (km):</Text>
               <Text style={styles.informationText}>
-                {(goal ? (goalProgress / 1000) % goal : 0).toFixed(2)}
+                {(goal ? (goalProgress / 1000) : 0).toFixed(2)}
                 {"    ("}
                 {goal
-                  ? ((((goalProgress / 1000) % goal) / goal) * 100).toFixed(3)
+                  ? ((((goalProgress / 1000)) / goal) * 100).toFixed(3)
                   : 0}
                 {"%)"}
+                {goalCompleteDate ? " Goal Reached!" : ""}
               </Text>
               <Text style={styles.title}>Goal (km):</Text>
               <TextInput

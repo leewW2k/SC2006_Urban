@@ -232,6 +232,7 @@ const TrackingScreen = ({ UserId }) => {
 
   const handleStop = async () => {
     setGoalProgress((prevGoalProgress) => prevGoalProgress + distance);
+    updateGoal();
     try {
       console.log("STOP");
       const response = await fetch(`${BASE_URL}/api/sessions`, {

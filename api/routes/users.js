@@ -40,12 +40,18 @@ router.post("/login", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { image, name, goal } = req.body;
-    const user = await User.findByIdAndUpdate(
-      id,
-      { image, name, goal },
-      { new: true }
-    );
+    const { image, name, goal, goalProgress } = req.body;
+    const user = await User.findById(id);
+    user.image = image;
+    user.name = name;
+    user.goalProgress = goalProgress;
+
+    if (req.body.hasOwnProperty("goal") && goal) {
+      user.goal = goal;
+      user.goalCompleteDate = null;
+    }
+
+    await user.save();
     res.json({ user });
   } catch (error) {
     console.log(error);
@@ -57,12 +63,14 @@ router.put("/:id/goal-progress", async (req, res) => {
   try {
     const { id } = req.params;
     const { goalProgress } = req.body;
-    const user = await User.findByIdAndUpdate(
-      id,
-      { goalProgress },
-      { new: true }
-    );
-    res.json({ user });
+    const user = await User.findById(id);
+
+    user.goalProgress = goalProgress;
+    if(user.goalProgress > user.goal && !user.goalCompleteDate){
+      user.goalCompleteDate = Date.now();
+    }
+    await user.save();
+    res.json(user);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Could not update goal progress" });
