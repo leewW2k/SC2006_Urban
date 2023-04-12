@@ -72,15 +72,13 @@ export default function RegisterScreen({ navigation, setUserId }) {
         }),
       });
       const data = await response.json();
-      Alert.alert(data.message);
       if (!data.user) {
+        Alert.alert(data.message);
         setErrorMessage(data.message);
       } else {
         navigation.navigate("Main", setUserId(data["user"]["_id"]));
       }
     } catch (error) {
-      Alert.alert("Error: " + error.message);
-      setErrorMessage("Error: " + error.message);
       console.log(error);
     }
   };
