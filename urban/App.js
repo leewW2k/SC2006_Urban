@@ -136,16 +136,16 @@ const App = () => {
           )}
         </Stack.Screen>
         <Stack.Screen
-                name="SessionView"
-                options={{
-                  title: "SessionView",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.headerTitleStyle,
-                  headerTintColor: "#fff",
-                }}
-              >
-                {(props) => <SessionViewScreen {...props} UserId={userId} />}
-          </Stack.Screen>
+          name="SessionView"
+          options={{
+            title: "SessionView",
+            headerStyle: styles.headerStyle,
+            headerTitleStyle: styles.headerTitleStyle,
+            headerTintColor: "#fff",
+          }}
+        >
+          {(props) => <SessionViewScreen {...props} UserId={userId} />}
+        </Stack.Screen>
         <Stack.Screen name="Track" component={TrackingScreen} />
       </Stack.Navigator>
     </NavigationContainer>

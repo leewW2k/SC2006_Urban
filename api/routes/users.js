@@ -77,10 +77,10 @@ router.put("/:id/goal-progress", async (req, res) => {
 router.put("/:id/goal-progress-reset", async (req, res) => {
   try {
     const { id } = req.params;
-    const { goalProgress } = req.body;
     const user = await User.findById(id);
 
     user.goalProgress = 0;
+    user.goalCompleteDate = null;
     await user.save();
     res.json(user);
   } catch (error) {

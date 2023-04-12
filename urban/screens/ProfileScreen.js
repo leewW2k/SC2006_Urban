@@ -103,7 +103,7 @@ const ProfileScreen = ({ UserId }) => {
         setGoal(userData.goal);
         setImage(userData.image);
         setGoalProgress(userData.goalProgress);
-        if (goalProgress >= goal) {
+        if (goalProgress !== 0 && goalProgress >= goal) {
           setGoalCompleteDate(Date.now());
         } else {
           setGoalCompleteDate(userData.goalCompleteDate);
@@ -148,9 +148,6 @@ const ProfileScreen = ({ UserId }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            goalProgress,
-          }),
         }
       );
       const data = await response.json();
@@ -249,7 +246,7 @@ const ProfileScreen = ({ UserId }) => {
                 {goalCompleteDate ? (
                   <Text>Goal Completed on {formatDate(goalCompleteDate)}</Text>
                 ) : (
-                  "No Goals Completed"
+                  "Goal Incomplete"
                 )}
               </Text>
             </View>

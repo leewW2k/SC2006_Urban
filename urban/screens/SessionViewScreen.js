@@ -3,10 +3,8 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import React, { useEffect, useState } from "react";
 import { palette } from "../styling";
 import Moment from "moment";
-import { MaterialIcons } from "@expo/vector-icons";
-import { TextInput } from "react-native";
 
-const SessionViewScreen = ({ route, UserId }) => {
+const SessionViewScreen = ({ route }) => {
   const [timing, setTiming] = useState(0);
   const [distance, setDistance] = useState(0);
   const [title, setTitle] = useState("");
@@ -27,12 +25,7 @@ const SessionViewScreen = ({ route, UserId }) => {
 
   const routeCoordinates = session.coordinates;
 
-  function formatDate(date) {
-    Moment.locale("en");
-    return Moment(date).format("MMMM Do YYYY, ddd H:mm a");
-  }
-
-  function secondsToHHMMSS(seconds) {
+  const secondsToHHMMSS = (seconds) => {
     const duration = Moment.duration(seconds, "seconds");
 
     const formattedDuration =
@@ -42,19 +35,7 @@ const SessionViewScreen = ({ route, UserId }) => {
       ":" +
       duration.seconds().toString().padStart(2, "0");
     return formattedDuration;
-  }
-
-  function secondsToHHMMSS(seconds) {
-    const duration = Moment.duration(seconds, "seconds");
-
-    const formattedDuration =
-      duration.hours() +
-      ":" +
-      duration.minutes().toString().padStart(2, "0") +
-      ":" +
-      duration.seconds().toString().padStart(2, "0");
-    return formattedDuration;
-  }
+  };
 
   return (
     <View style={{ marginTop: -10 }}>

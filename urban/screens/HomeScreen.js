@@ -5,10 +5,12 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import * as Location from "expo-location";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "../config";
+import { useIsFocused } from "@react-navigation/native";
 
 const HomeScreen = ({ UserId }) => {
   //coords pointing to Singapore
   console.log(UserId);
+  const isFocused = useIsFocused();
   const [mapRegion, setMapRegion] = useState({
     latitude: 1.29027,
     longitude: 103.851959,
@@ -38,7 +40,6 @@ const HomeScreen = ({ UserId }) => {
 
   let mapViewRef = useRef(null);
   useEffect(() => {
-    userLocation();
     if (mapRegion && selectedRegion) {
       let northeast = {
         latitude: Math.max(mapRegion.latitude, selectedRegion.latitude),
@@ -59,6 +60,10 @@ const HomeScreen = ({ UserId }) => {
       });
     }
   }, [selectedRegion]);
+
+  useEffect(() => {
+    userLocation();
+  }, [isFocused]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -84,7 +89,6 @@ const HomeScreen = ({ UserId }) => {
           components: "country:sg",
           types: "park",
           radius: 30000,
-          //location: `${selectedRegion.latitude}, ${selectedRegion.longitude}`,
         }}
         styles={{
           container: {

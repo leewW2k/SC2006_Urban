@@ -15,7 +15,6 @@ export default function RegisterScreen({ navigation, setUserId }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   function isValidEmail(email) {

@@ -48,15 +48,4 @@ router.get("/:id", async (req, res) => {
   res.json(await Session.find({ id: id }));
 });
 
-// router.get("/:id", async (req, res) => {
-//   const userId = req.params.id;
-//   try {
-//     const sessions = await Session.find({ id: userId });
-//     res.json(sessions);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: "Server error" });
-//   }
-// });
-
 module.exports = router;
