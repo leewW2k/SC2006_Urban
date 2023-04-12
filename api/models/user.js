@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
   },
   goalCompleteDate: {
     type: Date,
-    default: Date.now,
   },
   image: {
     type: String,

@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: palette.dustyRose,
     alignContent: "center",
     width: "100%",
-    marginTop: -10,
+    marginTop: -5,
     paddingHorizontal: 10,
   },
   containerSub: {
@@ -130,11 +130,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 100,
     width: "100%",
+    marginTop: 10,
     backgroundColor: "#F1E8DF",
     fontFamily: "serif",
-    marginTop: 14,
     justifyContent: "center",
-    alignContent: "space-around",
+    alignContent: "center",
     alignItems: "center",
   },
   informationText: {

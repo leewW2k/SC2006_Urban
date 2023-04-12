@@ -77,6 +77,7 @@ const ProfileScreen = ({ UserId }) => {
             name,
             goal,
             goalProgress,
+            goalCompleteDate,
           }),
         });
         const data = await response.json();
@@ -102,7 +103,11 @@ const ProfileScreen = ({ UserId }) => {
         setGoal(userData.goal);
         setImage(userData.image);
         setGoalProgress(userData.goalProgress);
-        setGoalCompleteDate(userData.goalCompleteDate);
+        if (goalProgress >= goal) {
+          setGoalCompleteDate(Date.now());
+        } else {
+          setGoalCompleteDate(userData.goalCompleteDate);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -120,6 +125,38 @@ const ProfileScreen = ({ UserId }) => {
   const formatDate = (date) => {
     Moment.locale("en");
     return Moment(date).format("MMMM Do YYYY");
+  };
+
+  const handleReset = () => {
+    Alert.alert("Reset Goal", "Are you sure you want to reset your goal?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        onPress: handleResetGoal,
+      },
+    ]);
+  };
+
+  const handleResetGoal = async () => {
+    setGoalProgress(0);
+    try {
+      console.log("handle" + goalProgress);
+      const response = await fetch(
+        `${BASE_URL}/api/users/${UserId}/goal-progress-reset`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            goalProgress,
+          }),
+        }
+      );
+      const data = await response.json();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -174,15 +211,32 @@ const ProfileScreen = ({ UserId }) => {
               style={styles.editText}
             />
           </View>
-          <View style={{ flexDirection: "row", alignContent: "space-between" }}>
+          <View>
             <View>
               <Text style={styles.title}>Goal Progress (km):</Text>
-              <Text style={styles.informationText}>
-                {(goal ? goalProgress / 1000 : 0).toFixed(2)}
-                {"    ("}
-                {goal ? ((goalProgress / 1000 / goal) * 100).toFixed(3) : 0}
-                {"%)"}
-              </Text>
+              <View style={{ flexDirection: "row" }}>
+                <Text style={styles.informationText}>
+                  {(goal ? goalProgress / 1000 : 0).toFixed(2)}
+                  {"    ("}
+                  {goal ? ((goalProgress / 1000 / goal) * 100).toFixed(3) : 0}
+                  {"%)     "}
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: palette.pastelBlue,
+                    margin: 5,
+                    borderRadius: 10,
+                    height: 19,
+                    justifyContent: "center",
+                    alignContent: "center",
+                    alignItems: "center",
+                    width: "20%",
+                  }}
+                  onPress={handleReset}
+                >
+                  <Text style={{ color: "white", fontSize: 12 }}>Reset</Text>
+                </TouchableOpacity>
+              </View>
               <Text style={styles.title}>Goal (km):</Text>
               <TextInput
                 keyboardType="numeric"

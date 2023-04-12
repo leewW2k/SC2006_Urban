@@ -333,7 +333,7 @@ const TrackingScreen = ({ UserId }) => {
           }}
         >
           <Text style={styles.informationText}>
-            Distance: {distance.toFixed(2)} meters
+            Distance: {(distance / 1000).toFixed(2)} km
           </Text>
           <Text style={styles.informationText}>Time: {formatTime(timing)}</Text>
           <Text style={styles.informationText}>
