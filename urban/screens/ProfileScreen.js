@@ -113,7 +113,7 @@ const ProfileScreen = ({ UserId }) => {
       }
     };
     fetchUserData();
-  }, [UserId, isEditable, isFocused]);
+  }, [UserId, isEditable, isFocused, goalProgress]);
 
   const checkValueIsNumberOrNot = (inputValue) => {
     if (isNaN(parseFloat(inputValue))) {
@@ -131,7 +131,7 @@ const ProfileScreen = ({ UserId }) => {
     Alert.alert("Reset Goal", "Are you sure you want to reset your goal?", [
       { text: "Cancel", style: "cancel" },
       {
-        text: "Delete",
+        text: "Reset",
         onPress: handleResetGoal,
       },
     ]);

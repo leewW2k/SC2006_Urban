@@ -14,7 +14,6 @@ import { Image } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 
 const SessionScreen = ({ navigation, UserId }) => {
-  console.log(UserId);
   const [sessions, setSessions] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const isFocused = useIsFocused();
@@ -28,15 +27,7 @@ const SessionScreen = ({ navigation, UserId }) => {
     try {
       const response = await fetch(`${BASE_URL}/api/sessions/${UserId}`);
       const sessionData = await response.json();
-      console.log("start session data");
-      console.log(sessionData);
-      if (sessionData.length > 0)
-        console.log(
-          "Attempting to parse sessionData.coordinates",
-          sessionData[0].coordinates
-        );
-      console.log("end session data");
-      setSessions(sessionData);
+      if (sessionData.length > 0) setSessions(sessionData);
       setRefreshing(false);
     } catch (error) {
       console.error(error);
