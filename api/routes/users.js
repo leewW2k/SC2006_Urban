@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
     res.status(201).send({ message: "Account successfully registered", user });
   } catch (error) {
     console.log(error);
-    res.status(400).send({ message: "Email Taken" });
+    res.status(400).send({ message: "Email Taken!!!" });
   }
 });
 
@@ -20,11 +20,11 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send({ message: "Invalid Email" });
+      return res.status(400).send({ message: "Invalid Email!!!" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).send({ message: "Invalid Password" });
+      return res.status(400).send({ message: "Invalid Password!!!" });
     }
     const token = jwt.sign({ userId: user._id }, "secretkey", {
       expiresIn: "1h",

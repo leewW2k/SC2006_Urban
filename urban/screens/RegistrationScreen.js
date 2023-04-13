@@ -17,9 +17,15 @@ export default function RegisterScreen({ navigation, setUserId }) {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  function isValidEmail(email) {
+  const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
-  }
+  };
+
+  const isInvalidPassword = (password) => {
+    const capitalRegex = /[A-Z]/;
+    const numberRegex = /[0-9]/;
+    return !capitalRegex.test(password) || !numberRegex.test(password);
+  };
 
   function validRegister(name, email, password) {
     if (name.length === 0 || email.length === 0 || password.length === 0) {
@@ -35,6 +41,11 @@ export default function RegisterScreen({ navigation, setUserId }) {
     if (password.length < 8 || password.length > 20) {
       Alert.alert("Password must be between 8-20 characters long!!!");
       setErrorMessage("Password must be between 8-20 characters long");
+      return false;
+    }
+    if (isInvalidPassword(password)) {
+      Alert.alert("At least 1 capital [A-Z] and 1 number [0-9]!!!");
+      setErrorMessage("At least 1 capital [A-Z] and 1 number [0-9]");
       return false;
     }
     if (name.length < 4 || name.length > 20) {
