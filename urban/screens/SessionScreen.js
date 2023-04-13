@@ -65,43 +65,45 @@ const SessionScreen = ({ navigation, UserId }) => {
         }
       >
         {sessions.length > 0 &&
-          sessions.map((session) => (
-            <TouchableOpacity
-              style={styles.containerSub}
-              key={session._id}
-              onPress={() => {
-                navigation.navigate("SessionView", { session: session });
-              }}
-            >
-              <View style={styles.containerSub} key={session._id}>
-                <View style={{ marginTop: -10 }}>
-                  <Text style={styles.titleText}>{session.title}</Text>
-                  <Text style={styles.informationText}>
-                    Timing: {secondsToHHMMSS(session.timing)}
-                  </Text>
-                  <Text style={styles.informationText}>
-                    Distance: {(session.distance / 1000).toFixed(2)} km
-                  </Text>
-                  <Text style={styles.informationText}>
-                    {formatDate(session.date)}
-                  </Text>
+          sessions
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .map((session) => (
+              <TouchableOpacity
+                style={styles.containerSub}
+                key={session._id}
+                onPress={() => {
+                  navigation.navigate("SessionView", { session: session });
+                }}
+              >
+                <View style={styles.containerSub} key={session._id}>
+                  <View style={{ marginTop: -10 }}>
+                    <Text style={styles.titleText}>{session.title}</Text>
+                    <Text style={styles.informationText}>
+                      Timing: {secondsToHHMMSS(session.timing)}
+                    </Text>
+                    <Text style={styles.informationText}>
+                      Distance: {(session.distance / 1000).toFixed(2)} km
+                    </Text>
+                    <Text style={styles.informationText}>
+                      {formatDate(session.date)}
+                    </Text>
+                  </View>
+                  <View>
+                    {session.isCycle ? (
+                      <Image
+                        source={require("../assets/cyclingIcon.png")}
+                        style={styles.icon}
+                      />
+                    ) : (
+                      <Image
+                        source={require("../assets/runningIcon.png")}
+                        style={styles.icon}
+                      />
+                    )}
+                  </View>
                 </View>
-                <View>
-                  {session.isCycle ? (
-                    <Image
-                      source={require("../assets/cyclingIcon.png")}
-                      style={styles.icon}
-                    />
-                  ) : (
-                    <Image
-                      source={require("../assets/runningIcon.png")}
-                      style={styles.icon}
-                    />
-                  )}
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
+              </TouchableOpacity>
+            ))}
       </ScrollView>
     </View>
   );
