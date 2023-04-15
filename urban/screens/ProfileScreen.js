@@ -16,19 +16,25 @@ import * as ImagePicker from "expo-image-picker";
 import { useIsFocused } from "@react-navigation/native";
 import Moment from "moment";
 
+// User Profile Screen
+// User can view and edit profile + goals
+// User can log out
 const ProfileScreen = ({ UserId }) => {
   console.log("Profile Page ", UserId);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
+  // States of user in profile page
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(0);
-  const [isEditable, setIsEditable] = useState(false);
   const [image, setImage] = useState(null);
   const [goalProgress, setGoalProgress] = useState(0);
   const [goalCompleteDate, setGoalCompleteDate] = useState(null);
+  // State to see if page is edit/view mode
+  const [isEditable, setIsEditable] = useState(false);
 
+  // Function to get image from device
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,10 +51,14 @@ const ProfileScreen = ({ UserId }) => {
     }
   };
 
+  // Executes when edit/save is pressed
   const toggleEditable = async () => {
     console.log(ImageBackgroundComponent);
     setIsEditable(!isEditable);
     console.log(isEditable);
+    // Executes when save is pressed
+    // Saves edited profile to database if valid
+    // Returns error messages if invalid
     if (isEditable === true) {
       if (name.length === "") {
         Alert.alert("Username cannot be empty");
@@ -90,6 +100,7 @@ const ProfileScreen = ({ UserId }) => {
     }
   };
 
+  // Triggers when page is entered
   useEffect(() => {
     // Retrieve user attributes from server
     const fetchUserData = async () => {
@@ -113,8 +124,9 @@ const ProfileScreen = ({ UserId }) => {
       }
     };
     fetchUserData();
-  }, [UserId, isEditable, isFocused, goalProgress]);
+  }, [isEditable, isFocused, goalProgress]);
 
+  // Checks whether edited goal input ever becomes blank
   const checkValueIsNumberOrNot = (inputValue) => {
     if (isNaN(parseFloat(inputValue))) {
       return 0;
@@ -122,11 +134,13 @@ const ProfileScreen = ({ UserId }) => {
     return parseFloat(inputValue);
   };
 
+  // Formats date to MMMM Do YYYY
   const formatDate = (date) => {
     Moment.locale("en");
     return Moment(date).format("MMMM Do YYYY");
   };
 
+  // Alerts when user presses reset
   const handleReset = () => {
     Alert.alert("Reset Goal", "Are you sure you want to reset your goal?", [
       { text: "Cancel", style: "cancel" },
@@ -137,6 +151,7 @@ const ProfileScreen = ({ UserId }) => {
     ]);
   };
 
+  // Sets goal to 0 and save it
   const handleResetGoal = async () => {
     setGoalProgress(0);
     try {

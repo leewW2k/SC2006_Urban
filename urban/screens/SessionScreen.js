@@ -13,16 +13,19 @@ import Moment from "moment";
 import { Image } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 
+// Shows the session history of the logged in user for Urban
 const SessionScreen = ({ navigation, UserId }) => {
   const [sessions, setSessions] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const isFocused = useIsFocused();
 
+  // Scroll up to refresh page
   const onRefresh = () => {
     setRefreshing(true);
     fetchSessionData();
   };
 
+  // Get the sessions associated with the user
   const fetchSessionData = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/sessions/${UserId}`);
@@ -34,16 +37,19 @@ const SessionScreen = ({ navigation, UserId }) => {
     }
   };
 
+  // Updates page when refreshed
   useEffect(() => {
     // Retrieve user attributes from server
     fetchSessionData();
   }, [isFocused]);
 
+  // formats date to MMMM Do YYYY, ddd H:mm a
   function formatDate(date) {
     Moment.locale("en");
     return Moment(date).format("MMMM Do YYYY, ddd H:mm a");
   }
 
+  // formates seconds to HH:MM:SS
   function secondsToHHMMSS(seconds) {
     const duration = Moment.duration(seconds, "seconds");
 

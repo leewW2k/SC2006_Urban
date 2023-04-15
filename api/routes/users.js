@@ -4,6 +4,8 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// post request for user registration
+// executes when user enter valid login details for user registration
 router.post("/", async (req, res) => {
   try {
     const user = new User(req.body);
@@ -15,6 +17,8 @@ router.post("/", async (req, res) => {
   }
 });
 
+// post request for user login
+// executes when user tries to login into their account
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -37,6 +41,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// get the user details after the user successfully logins
+// displayed on the profile page of Urban
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -56,6 +62,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// get the user goal progress
+// executes when u need to update after saving session
 router.put("/:id/goal-progress", async (req, res) => {
   try {
     const { id } = req.params;
@@ -74,6 +82,8 @@ router.put("/:id/goal-progress", async (req, res) => {
   }
 });
 
+// resets user goal progres
+// executes when user presses the reset page in profile page
 router.put("/:id/goal-progress-reset", async (req, res) => {
   try {
     const { id } = req.params;
@@ -89,6 +99,8 @@ router.put("/:id/goal-progress-reset", async (req, res) => {
   }
 });
 
+// get the userid of the user
+// returns userId by finding the id in DB
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   console.log("id received: " + id);

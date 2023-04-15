@@ -8,9 +8,10 @@ import { GOOGLE_MAPS_APIKEY } from "../config";
 import { useIsFocused } from "@react-navigation/native";
 
 const HomeScreen = ({ UserId }) => {
-  //coords pointing to Singapore
   console.log(UserId);
+  //used to ensure the page is always rendered when entered
   const isFocused = useIsFocused();
+  //coords pointing to Singapore (our default location)
   const [mapRegion, setMapRegion] = useState({
     latitude: 1.29027,
     longitude: 103.851959,
@@ -18,10 +19,11 @@ const HomeScreen = ({ UserId }) => {
     longitudeDelta: 0.0421,
   });
 
-  //use this to establish markers
+  //coords pointing to destination selected by user
   const [selectedRegion, setSelectedRegion] = useState(null);
 
-  //request for permission
+  //request for foreground location permissions
+  //sets mapRegion to current location once accepted
   const userLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -38,7 +40,15 @@ const HomeScreen = ({ UserId }) => {
     });
   };
 
+  //requests permission if not accepted
+  //triggers once user enters the page
+  useEffect(() => {
+    userLocation();
+  }, [isFocused]);
+
+  //used to zoom out the map accordingly when there is a mapRegion and selectedRegion
   let mapViewRef = useRef(null);
+  //triggers once user selected a destination
   useEffect(() => {
     if (mapRegion && selectedRegion) {
       let northeast = {
@@ -61,12 +71,9 @@ const HomeScreen = ({ UserId }) => {
     }
   }, [selectedRegion]);
 
-  useEffect(() => {
-    userLocation();
-  }, [isFocused]);
-
   return (
     <View style={{ flex: 1 }}>
+      {/*Search Bar, use of Google Places API*/}
       <GooglePlacesAutocomplete
         placeholder="Destination"
         fetchDetails={true}
@@ -100,13 +107,18 @@ const HomeScreen = ({ UserId }) => {
           listView: { backgroundColor: "white" },
         }}
       />
+      {/* View of the map, Google Maps API */}
       <MapView
         style={styles.map}
         region={mapRegion}
         provider="google"
         ref={mapViewRef}
       >
+        {/* Marker pointing to your location (if permission accepted) */}
         <Marker coordinate={mapRegion} title="MyLocation" />
+        {/* Marker pointing to selected destination
+        and shows a route between your current location 
+        and searched location (if searched) */}
         {selectedRegion && (
           <>
             <Marker

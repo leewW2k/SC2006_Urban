@@ -4,11 +4,12 @@ import React, { useEffect, useState } from "react";
 import { palette } from "../styling";
 import Moment from "moment";
 
+// View when user clicks on a saved session
 const SessionViewScreen = ({ route }) => {
+  // States of the session
   const [timing, setTiming] = useState(0);
   const [distance, setDistance] = useState(0);
   const [title, setTitle] = useState("");
-  console.log("Session View");
   const { session } = route.params;
   const [mapRegion, setMapRegion] = useState({
     latitude: session.coordinates[0].latitude,
@@ -17,6 +18,7 @@ const SessionViewScreen = ({ route }) => {
     longitudeDelta: 0.006,
   });
 
+  // Executes when enter page
   useEffect(() => {
     setTiming(session.timing);
     setDistance(session.distance);
@@ -25,6 +27,7 @@ const SessionViewScreen = ({ route }) => {
 
   const routeCoordinates = session.coordinates;
 
+  // formats seconds to HH:MM:SS
   const secondsToHHMMSS = (seconds) => {
     const duration = Moment.duration(seconds, "seconds");
 

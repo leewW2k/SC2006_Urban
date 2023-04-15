@@ -36,6 +36,7 @@ const TrackingScreen = ({ UserId }) => {
   const [title, setTitle] = useState("Urban Adventure");
 
   const LOCATION_TASK_NAME = "background-location-task";
+  // manages location tracking on hardware device
   TaskManager.defineTask(
     "background-location-task",
     async ({ data, error }) => {
@@ -51,6 +52,8 @@ const TrackingScreen = ({ UserId }) => {
     }
   );
 
+  // Executes when user enters page, requests background location and get current location
+  // Fetches progress of user as well
   useEffect(() => {
     const userLocation = async () => {
       let { status } = await Location.requestBackgroundPermissionsAsync();
@@ -80,6 +83,7 @@ const TrackingScreen = ({ UserId }) => {
     fetchProgress();
   }, []);
 
+  // Handles the background location tracking
   const startBackgroundLocation = async () => {
     try {
       await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
@@ -97,6 +101,7 @@ const TrackingScreen = ({ UserId }) => {
     }
   };
 
+  // handles background location tracking when tracking is paused
   const pauseBackgroundLocation = async () => {
     try {
       await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
@@ -107,6 +112,7 @@ const TrackingScreen = ({ UserId }) => {
     }
   };
 
+  // handles background location tracking when session is resumed
   const resumeBackgroundLocation = async () => {
     try {
       TaskManager.defineTask(
@@ -139,6 +145,7 @@ const TrackingScreen = ({ UserId }) => {
     }
   };
 
+  // handles background location tracking when session is stopped
   const stopBackgroundLocation = async () => {
     try {
       await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
@@ -150,6 +157,8 @@ const TrackingScreen = ({ UserId }) => {
     }
   };
 
+  // handles location update when session is running
+  // saves the coord and accumulates the distance
   const handleLocationUpdate = async (location) => {
     console.log("New location:", location);
     locationArrayRef.current.push({
@@ -182,6 +191,7 @@ const TrackingScreen = ({ UserId }) => {
     setPrevLocation(location);
   };
 
+  // handle the session when start is pressed
   const handleStart = () => {
     locationArrayRef.current = [];
     setTiming((time) => 0);
@@ -193,11 +203,15 @@ const TrackingScreen = ({ UserId }) => {
     setStarted(true);
   };
 
+  // handle the session when pause is pressed
+  // stop the timing and background location
   const handlePause = async () => {
     clearInterval(intervalIdRef.current);
     await pauseBackgroundLocation();
   };
 
+  // handle the session when resume is pressed
+  // continues timing and starts background location
   const handleResume = async () => {
     intervalIdRef.current = setInterval(() => {
       setTiming((time) => time + 1);
@@ -205,10 +219,13 @@ const TrackingScreen = ({ UserId }) => {
     await resumeBackgroundLocation();
   };
 
+  // updates goal when goalProgress is changed
   useEffect(() => {
     updateGoal();
   }, [goalProgress]);
 
+  // accumulates distance to the goal progress
+  // save to DB
   const updateGoal = async () => {
     try {
       console.log(goalProgress);
@@ -230,6 +247,8 @@ const TrackingScreen = ({ UserId }) => {
     }
   };
 
+  // handles the system when stop is pressed
+  // saves the session and goal progress when stop is pressed
   const handleStop = async () => {
     setGoalProgress((prevGoalProgress) => prevGoalProgress + distance);
     updateGoal();
@@ -263,14 +282,17 @@ const TrackingScreen = ({ UserId }) => {
     setStarted(false);
   };
 
+  // set context to cycling session
   const handleCycle = () => {
     setIsCycle(true);
   };
 
+  // set context to running session
   const handleRun = () => {
     setIsCycle(false);
   };
 
+  // format time to hh:mm:ss
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60)
       .toString()

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Session = require("../models/session");
 
+// post requests for saving sessions
+// executes when stop is pressed
 router.post("/", async (req, res) => {
   try {
     const { id, distance, timing, coordinates, isCycle, title } = req.body;
@@ -21,6 +23,8 @@ router.post("/", async (req, res) => {
   }
 });
 
+// get request for session history page
+// executes when user enters the session page
 router.get("/", async (req, res) => {
   const { id } = req.params;
   console.log("id received: " + id);
@@ -32,16 +36,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
-  try {
-    await Session.deleteMany();
-    res.status(200).json({ message: "All sessions deleted successfully." });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
+// get request for the session view page
+// executes when user enters a session view from the session page
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   console.log(id);

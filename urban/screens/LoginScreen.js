@@ -12,11 +12,16 @@ import { BASE_URL } from "../config";
 import { Alert } from "react-native";
 
 export default function LoginScreen({ navigation, setUserId }) {
+  // State of the user login details (email, password)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // State of the error messages
   const [errorMessage, setErrorMessage] = useState("");
   console.log(`${BASE_URL}/api/users/login`);
 
+  // executes when user presses Login button
+  // returns userID to DB when valid
+  // returns invalid error when invalid
   const handleLogin = async () => {
     // Error Checking
     if (email == "" || password == "") {
@@ -93,6 +98,7 @@ export default function LoginScreen({ navigation, setUserId }) {
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
+          {/* Goes to Registration Page upon pressing */}
           <TouchableOpacity onPress={() => navigation.navigate("Register")}>
             <Text
               style={{

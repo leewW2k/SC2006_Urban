@@ -18,8 +18,11 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const App = () => {
+  //save state of user to pass as props during navigation
   const [userId, setUserId] = useState(null);
 
+  //deals with the navigation (routing) of the mobile application,
+  //with the use of stack and tab navigation
   return (
     <NavigationContainer>
       <Stack.Navigator>

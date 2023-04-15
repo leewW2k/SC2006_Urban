@@ -2,6 +2,9 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { palette } from "../styling";
 
+{
+  /* Page of Urban once you start the application*/
+}
 const Index = ({ navigation }) => {
   return (
     <View style={styles.container}>

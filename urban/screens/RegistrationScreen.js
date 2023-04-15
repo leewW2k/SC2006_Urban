@@ -11,22 +11,30 @@ import { palette } from "../styling";
 import { BASE_URL } from "../config";
 const isAlphanumeric = require("is-alphanumeric");
 
+// Register Screen of Urban
 export default function RegisterScreen({ navigation, setUserId }) {
+  // States for login details
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // State when there is an error message
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Check if email is valid, follows email regex
   const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
+  // Check if password is valid, contains at least 1 capital and 1 number
   const isInvalidPassword = (password) => {
     const capitalRegex = /[A-Z]/;
     const numberRegex = /[0-9]/;
     return !capitalRegex.test(password) || !numberRegex.test(password);
   };
 
+  // Checks whether the registration details are valid
+  // Saves to DB if valid
+  // sets error messages if invalid
   function validRegister(name, email, password) {
     if (name.length === 0 || email.length === 0 || password.length === 0) {
       Alert.alert("Username/Email/Password cannot be Empty!!!");
@@ -61,6 +69,7 @@ export default function RegisterScreen({ navigation, setUserId }) {
     return true;
   }
 
+  // Executes when user presses register
   const register = async () => {
     if (validRegister(name, email, password)) {
       console.log("Yes");
@@ -68,6 +77,7 @@ export default function RegisterScreen({ navigation, setUserId }) {
     }
   };
 
+  // Saves registration details to DB
   const handleRegister = async () => {
     try {
       const response = await fetch(`${BASE_URL}/api/users`, {
