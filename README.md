@@ -1,4 +1,4 @@
-# UrbanSC2006
+# SC2006 Urban
 
 Updated as of 13/4/23
 
